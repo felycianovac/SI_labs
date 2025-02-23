@@ -3,10 +3,9 @@
 
 #include <stdio.h>
 
-
 void service_serial_stdio_setup();
-char get_char(void);
 
-void put_char(char c);
+int get_serial_char(FILE *stream);
+int put_serial_char(char c, FILE *stream);
 
 #endif // SERVICE_SERIAL_STDIO_H

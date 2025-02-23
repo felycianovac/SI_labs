@@ -1,6 +1,6 @@
 #include "lab_1_1_app.h"
-#include "led/led.h"
-#include "service_serial_stdio/service_serial_stdio.h"
+#include "../../led/led.h"
+#include "../service_serial_stdio/service_serial_stdio.h"
 #include <Arduino.h>
 #include <string.h>
 
@@ -33,15 +33,15 @@ void lab_1_1_app_loop() {
         // Check commands
         if (strcmp(trimmed, "led on") == 0) {
             // Turn on the LED
-            ledOn();
+            ledOn(GREEN_LED);
             printf("LED turned on!\n");
         } else if (strcmp(trimmed, "led off") == 0) {
             // Turn off the LED
-            ledOff();
+            ledOff(GREEN_LED);
             printf("LED turned off!\n");
         } else {
             // Invalid command
-            printf("Invalid Command! Use 'led on' or 'led off'.\n");
+            printf("Invalid Command! Use 'led on!' or 'led off!'.\n");
         }
         
     } else {
