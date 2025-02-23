@@ -24,6 +24,7 @@ int lcd_putchar(char c, FILE* stream) {
         current_col = 0;
         // Clear the display if moving to the first row
         if (current_row == 0) {
+            // Clear the display
             lcd.clear();
         }
         // Move the cursor

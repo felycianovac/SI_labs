@@ -2,6 +2,11 @@
 #include "../lcd_stdio/lcd_stdio.h"
 #include "../keypad_stdio/keypad_stdio.h"
 
+// Code validation
+const char correctCode[] = "7777";
+char enteredCode[5] = "";
+
+
 void lab_1_2_app_setup() {
     Serial.begin(9600);
     
@@ -21,6 +26,7 @@ void lab_1_2_app_setup() {
 void lab_1_2_app_loop() {
     // Read code using scanf
     scanf("%4s", enteredCode);
+    // Null-terminate the string
     enteredCode[4] = '\0';
     
     // Check code and update outputs
@@ -38,7 +44,7 @@ void lab_1_2_app_loop() {
         ledOn(RED_LED);
     }
     
-    // Wait and reset
+    // A small delay before clearing the code
     delay(2000);
     ledOff(GREEN_LED);
     ledOff(RED_LED);

@@ -17,9 +17,6 @@ byte colPins[COLS] = {9, 8, 7, 6};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 FILE keypad_stdin;
 
-// Code validation
-const char correctCode[] = "2354";
-char enteredCode[5] = "";
 
 void keypadSetup() {
     fdev_setup_stream(&keypad_stdin, NULL, keypad_getchar, _FDEV_SETUP_READ);
@@ -34,7 +31,6 @@ int keypad_getchar(FILE* stream) {
         // Small delay to prevent CPU overload
         delay(10);
     } while (!key);
-    
     Serial.print(key);  // Echo to Serial Monitor
     fputc(key, &lcd_stdout);  // Echo to LCD
     return key;

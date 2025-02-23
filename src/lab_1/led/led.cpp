@@ -3,6 +3,7 @@
 
 // LED pin
 void ledSetup() {
+    // Set the LED pins as outputs
     pinMode(GREEN_LED, OUTPUT);
     pinMode(RED_LED, OUTPUT);
 }

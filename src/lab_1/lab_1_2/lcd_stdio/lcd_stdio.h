@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <LiquidCrystal.h>
 
-extern LiquidCrystal lcd;
-extern FILE lcd_stdout;
+extern LiquidCrystal lcd; // LCD instance
+extern FILE lcd_stdout; // Stream for LCD output
 
 void lcdSetup();
 int lcd_putchar(char c, FILE* stream);
