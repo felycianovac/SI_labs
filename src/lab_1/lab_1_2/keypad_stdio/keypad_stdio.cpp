@@ -10,8 +10,8 @@ char keys[ROWS][COLS] = {
     {'*', '0', '#', 'D'}
 };
 // Keypad pins connected to the Arduino
-byte rowPins[ROWS] = {A0, A1, A2, A3};
-byte colPins[COLS] = {9, 8, 7, 6};
+byte rowPins[ROWS] = {9, 8, 7, 6};
+byte colPins[COLS] = {5, 4, 3, 2};
 
 // Create keypad instance
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);

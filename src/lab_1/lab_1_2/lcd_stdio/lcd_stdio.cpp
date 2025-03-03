@@ -1,7 +1,7 @@
 #include "lcd_stdio.h"
 
 // LCD instance connected to the following pins
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 // Stream for LCD output
 FILE lcd_stdout;
 // Current cursor position
@@ -10,6 +10,8 @@ static uint8_t current_row = 0;
 
 void lcdSetup() {
     // Initialize LCD
+    lcd.init();
+    lcd.backlight();
     lcd.begin(16, 2);
     // Set up the LCD stream
     fdev_setup_stream(&lcd_stdout, lcd_putchar, NULL, _FDEV_SETUP_WRITE);
