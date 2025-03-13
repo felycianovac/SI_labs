@@ -16,5 +16,7 @@ void lab_2_1_app_setup() {
     printf("APP Lab 2.1 Started\n");
 }
 void lab_2_1_app_loop() {
+    taskIdle();  // System reporting
+    delay(1000);
 
 }

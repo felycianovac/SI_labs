@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 #define BUTTON1 2
-#define BUTTON2 4
-#define BUTTON3 3
+#define BUTTON2 3
+#define BUTTON3 4
 
 void setupButtons();
 bool isButtonPressed(int buttonPin);

@@ -31,16 +31,20 @@ void taskBlinkingLed() {
 
 // **Task 3: Handle Variable State (Adjust Blink Delay)**
 void taskVariableState() {
-    //check if button is pressed and adjust blink delay
     if (isButtonPressed(BUTTON2)) {
-        setBlinkDelay(min(getBlinkDelay() + 100, 2000));
+        int newDelay = getBlinkDelay() + 100;
+        if (newDelay > 2000) newDelay = 2000;
+        setBlinkDelay(newDelay);
     }
     if (isButtonPressed(BUTTON3)) {
-        setBlinkDelay(min(getBlinkDelay() - 100, 100));
+        int newDelay = getBlinkDelay() - 100;
+        if (newDelay < 100) newDelay = 100;
+        setBlinkDelay(newDelay);
     }
 }
 
 // **Task 4: Idle Task (System Reporting)**
 void taskIdle() {
     reportSystemState();
+    delay(1000);
 }

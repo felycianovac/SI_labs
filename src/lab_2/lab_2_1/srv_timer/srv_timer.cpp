@@ -19,8 +19,7 @@ ISR(TIMER1_COMPA_vect) {
     static int buttonTaskCounter = 5;  // Every 50ms
     static int blinkingTaskCounter = 20; // Every 200ms
     static int variableStateCounter = 10; // Every 100ms
-    static int idleTaskCounter = 100; // Every 1s
-
+    
     if (--buttonTaskCounter <= 0) {
         buttonTaskCounter = 5;
         taskButtonLed();
@@ -34,10 +33,5 @@ ISR(TIMER1_COMPA_vect) {
     if (--variableStateCounter <= 0) {
         variableStateCounter = 10;
         taskVariableState();
-    }
-
-    if (--idleTaskCounter <= 0) {
-        idleTaskCounter = 100;
-        taskIdle();
     }
 }
