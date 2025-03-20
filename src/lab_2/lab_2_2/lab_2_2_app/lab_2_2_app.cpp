@@ -12,10 +12,12 @@ void lab_2_2_app_setup() {
     ledSetup();
     setupSharedResources();
 
+    // Create tasks
     xTaskCreate(handleButton, "ButtonHandler", TASK_STACK, NULL, TASK_PRIO, NULL);
     xTaskCreate(handleSync, "SyncHandler", TASK_STACK, NULL, TASK_PRIO, NULL);
     xTaskCreate(handleAsync, "AsyncHandler", TASK_STACK, NULL, TASK_PRIO, NULL);
 
+    // Start the scheduler
     vTaskStartScheduler();
 }
 void lab_2_2_app_loop() {

@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define BUTTON_PIN 2
+#define BUTTON_PIN 11
 
 // Button Functions
 void buttonSetup();
