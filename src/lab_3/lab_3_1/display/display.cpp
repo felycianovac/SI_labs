@@ -21,21 +21,21 @@ void display_update(SensorData data) {
         if (data.distance_cm < 10.0) { // Check if the distance is less than 10 cm
             printf("| ALERT: Object too close!                |\r\n");
             printf("| Sensor Status: CRITICAL                 |\r\n");
-            ledOn(12);  // Turn on LED
+            ledOn(13);  // Turn on LED
         } 
         else if (data.distance_cm > 300.0) { // Check if the distance is greater than 300 cm
             printf("| ALERT: Object too far / Out of range!   |\r\n");
             printf("| Sensor Status: WARNING                  |\r\n");
-            ledOn(12);  // Turn on LED
+            ledOn(13);  // Turn on LED
         } 
         else {
             printf("| Sensor Status: OK                       |\r\n");
-            ledOff(12);  // Turn off LED
+            ledOff(13);  // Turn off LED
         }
     } else {
         printf("| ERROR: Out of range / Invalid Reading   |\r\n"); // Display error message
         printf("| Sensor Status: ERROR                    |\r\n");
-        ledOn(12);  // Turn on LED
+        ledOn(13);  // Turn on LED
     }
 
     printf("============================================\r\n\n");
