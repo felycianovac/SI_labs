@@ -5,7 +5,7 @@
 #include "../display/display.h"
 #include <task.h>
 
-#define FILTER_WINDOW 5
+#define FILTER_WINDOW 51
 
 // Buffere și index pentru filtre
 static uint16_t buffer_x[FILTER_WINDOW] = {0};
@@ -18,16 +18,16 @@ QueueHandle_t displayQueue;
 
 // === Joystick Task ===
 void joystick_task(void *pvParameters) {
-    TickType_t lastWakeTime = xTaskGetTickCount();
-    const TickType_t period = pdMS_TO_TICKS(1500);
+    TickType_t lastWakeTime = xTaskGetTickCount(); // Initialize lastWakeTime
+    const TickType_t period = pdMS_TO_TICKS(500); // Set task period to 500ms
 
     while (1) {
-        SensorRawData raw_data = read_sensor();
+        SensorRawData raw_data = read_sensor(); // Read raw data from joystick
 // Apply both filters for X
         uint16_t clean_x = filter_salt_and_pepper(raw_data.x_raw, 'x');
         uint16_t filtered_x = moving_average(clean_x, 'x');
-        float voltage_x = adc_to_voltage(filtered_x);
-        float percent_x = voltage_to_physical_parameter(voltage_x);
+        float voltage_x = adc_to_voltage(filtered_x); // Convert to voltage
+        float percent_x = voltage_to_physical_parameter(voltage_x); // Convert to physical parameter
 
         uint16_t clean_y = filter_salt_and_pepper(raw_data.y_raw, 'y');
         uint16_t filtered_y = moving_average(clean_y, 'y');
@@ -35,8 +35,8 @@ void joystick_task(void *pvParameters) {
 
         float percent_y = voltage_to_physical_parameter(voltage_y);
 
-        // Umplem structura de display
-        DisplayData data;
+        //filling the buffer for display
+        DisplayData data; 
         data.raw_x = raw_data.x_raw;
         data.raw_y = raw_data.y_raw;
         data.filtered_x = filtered_x;
@@ -48,19 +48,19 @@ void joystick_task(void *pvParameters) {
         data.button_state = raw_data.button_state;
         data.timestamp = raw_data.timestamp;
 
-        // Trimitem la coadă
+        // Send data to display task
         xQueueSend(displayQueue, &data, portMAX_DELAY);
 
-        vTaskDelayUntil(&lastWakeTime, period);
+        vTaskDelayUntil(&lastWakeTime, period); // Maintain periodicity
     }
 }
 
 // === Display Task ===
 void display_task(void *pvParameters) {
-    DisplayData received_data;
+    DisplayData received_data; //initialize the data structure for display
 
     while (1) {
-        if (xQueueReceive(displayQueue, &received_data, portMAX_DELAY) == pdTRUE) {
+        if (xQueueReceive(displayQueue, &received_data, portMAX_DELAY) == pdTRUE) { //
             display_full_status(&received_data);
         }
     }
