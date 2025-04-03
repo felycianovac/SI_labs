@@ -3,22 +3,35 @@
   "author": "Felicia Novac",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-arduino-mega", "id": "mega", "top": 0, "left": 0, "attrs": {} },
     {
-      "type": "wokwi-analog-joystick",
-      "id": "joystick1",
-      "top": 226.2,
-      "left": 93.2,
-      "rotate": 180,
+      "type": "wokwi-arduino-mega",
+      "id": "mega",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -90,
+      "left": -34.6,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay1",
+      "top": 288.2,
+      "left": 124.8,
       "attrs": {}
     }
   ],
   "connections": [
-    [ "joystick1:VCC", "mega:5V", "red", [ "v0" ] ],
-    [ "joystick1:GND", "mega:GND.1", "black", [ "v0" ] ],
-    [ "joystick1:HORZ", "mega:A0", "green", [ "v0" ] ],
-    [ "joystick1:VERT", "mega:A1", "green", [ "v0" ] ],
-    [ "joystick1:SEL", "mega:2", "green", [ "v0" ] ]
+    [ "mega:5V", "relay1:VCC", "red", [ "v0" ] ],
+    [ "relay1:GND", "mega:GND.2", "black", [ "h0" ] ],
+    [ "relay1:COM", "mega:3.3V", "green", [ "h0" ] ],
+    [ "relay1:IN", "mega:5", "green", [ "h0" ] ],
+    [ "led1:A", "relay1:NO", "green", [ "v0" ] ],
+    [ "led1:C", "mega:GND.1", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }

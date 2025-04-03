@@ -18,7 +18,9 @@ void service_serial_stdio_setup() {
 // Function to read a character from Serial
 int get_serial_char(FILE *stream) {
     while (!Serial.available());
-    return Serial.read();
+    char c = Serial.read();
+    Serial.write(c);  // ECHO: scrie înapoi caracterul în terminal
+    return c;
 }
 
 // Function to write a character to Serial
