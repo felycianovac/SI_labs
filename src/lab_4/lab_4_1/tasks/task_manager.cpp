@@ -22,7 +22,8 @@ void Task_CommandReader(void *pvParameters) {
 
             if (strcmp(action, "on") == 0) cmd = CMD_RELAY_ON; //if the second word is "on"
             else if (strcmp(action, "off") == 0) cmd = CMD_RELAY_OFF;
-            else {printf("Unknown command: %s\n", action);
+            else {
+            printf("Unknown command: %s\n", action);
             ledOn(RED_LED);
             delay(300);
             ledOff(RED_LED);
@@ -30,7 +31,7 @@ void Task_CommandReader(void *pvParameters) {
             
 
             if (cmd != CMD_NONE)
-                xQueueSend(commandQueue, &cmd, portMAX_DELAY);
+                xQueueSend(commandQueue, &cmd, portMAX_DELAY); //send command to queue
         } else {
             ledOn(RED_LED);
             delay(300);
@@ -39,7 +40,7 @@ void Task_CommandReader(void *pvParameters) {
             printf("Unknown command. Use: relay on / relay off\n");
         }
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(100)); //set task delay
     }
 }
 
@@ -47,8 +48,8 @@ void Task_RelayControl(void *pvParameters) {
     RelayCommand cmd;
 
     while (1) {
-        if (xQueueReceive(commandQueue, &cmd, portMAX_DELAY)) {
-            switch (cmd) {
+        if (xQueueReceive(commandQueue, &cmd, portMAX_DELAY)) { //if a command is received
+            switch (cmd) { //
                 case CMD_RELAY_ON:
                     relayOn();
                     printf("Relay Active (ON)\r\n");
