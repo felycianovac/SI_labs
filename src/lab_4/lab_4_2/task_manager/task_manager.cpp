@@ -24,53 +24,71 @@ void TaskManager_Init() {
 
 void Task_CommandInput(void *pvParameters) {
     MotorCommand cmd;
-
+    char input[64];
 
     while (true) {
-        int value;
-        char action[16];
-
         printf("> ");
-        scanf("%s", action);
+        fflush(stdout);
 
-        if (strcmp(action, "motor") == 0) {
-            scanf("%s", action);
+        // Read everything until '!' (excluding '!')
+        scanf(" %[^\n!]", input);  // read until newline or '!'
+        getchar(); // consume the '!' or newline
 
-            if (strcmp(action, "set") == 0) {
-                scanf("%d", &value);
-                printf("Setting motor power to %d%%\r\n", value);
-                value = constrain(value, -100, 100);
-                cmd.power = value;
-                xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
-            } else if (strcmp(action, "stop") == 0) {
+        // Parse the command
+        char action[16];
+        int value;
+        int parsed = sscanf(input, "%s", action);
+
+        if (parsed == 1 && strcmp(action, "motor") == 0) {
+            char subcommand[16];
+            parsed = sscanf(input + strlen("motor"), "%s", subcommand);
+
+            // Parse full string for more precision
+            if (strstr(input, "set") != NULL) {
+                parsed = sscanf(input, "motor set %d", &value);
+                if (parsed == 1) {
+                    printf("\r\n");
+                    printf("Setting motor power to %d%%\r\n", value);
+                    value = constrain(value, -100, 100);
+                    cmd.power = value;
+                    xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
+                }
+            } else if (strstr(input, "stop") != NULL) {
+                printf("\r\n");
                 printf("Stopping motor.\r\n");
                 cmd.power = 0;
                 xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
-            } else if (strcmp(action, "max") == 0) {
+            } else if (strstr(input, "max") != NULL) {
+                printf("\r\n");
                 printf("Setting motor to max power.\r\n");
                 int current = Motor_GetPower();
                 cmd.power = (current >= 0) ? 100 : -100;
                 xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
-            } else if (strcmp(action, "inc") == 0) {
+            } else if (strstr(input, "inc") != NULL) {
+                printf("\r\n");
                 printf("Increasing motor power.\r\n");
                 int current = Motor_GetPower();
                 cmd.power = constrain(current + ((current >= 0) ? 10 : -10), -100, 100);
                 xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
-            } else if (strcmp(action, "dec") == 0) {
+            } else if (strstr(input, "dec") != NULL) {
+                printf("\r\n");
                 printf("Decreasing motor power.\r\n");
                 int current = Motor_GetPower();
                 cmd.power = constrain(current + ((current >= 0) ? -10 : 10), -100, 100);
                 xQueueSend(motorCommandQueue, &cmd, portMAX_DELAY);
             } else {
+                printf("\r\n");
                 printf("Unknown motor command.\r\n");
             }
         } else {
+            printf("\r\n");
             printf("Invalid command.\r\n");
         }
 
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
+
 
 void Task_MotorControl(void *pvParameters) {
     MotorCommand cmd;
