@@ -8,6 +8,7 @@
 #include "lab_4/lab_4_1/lab_4_1_app/lab_4_1_app.h"
 #include "lab_4/lab_4_2/lab_4_2_app/lab_4_2_app.h"
 #include "lab_5/lab_5_1/lab_5_1_app/lab_5_1_app.h"
+#include "lab_5/lab_5_2/lab_5_2_app/lab_5_2_app.h"
 
 #define LAB_1_1 11
 #define LAB_1_2 12
@@ -18,8 +19,9 @@
 #define LAB_4_1 41
 #define LAB_4_2 42
 #define LAB_5_1 51
+#define LAB_5_2 52
 
-#define APP_USED LAB_5_1
+#define APP_USED LAB_5_2
 
 
 
@@ -51,7 +53,9 @@ void setup() {
   #if APP_USED == LAB_5_1
     lab_5_1_app_setup();
   #endif
-
+  #if APP_USED == LAB_5_2
+    lab_5_2_app_setup();
+  #endif
 
 }
 
@@ -83,6 +87,9 @@ void loop() {
   #if APP_USED == LAB_5_1
     lab_5_1_app_loop();
   #endif
+  #if APP_USED == LAB_5_2
+  lab_5_2_app_loop();
+#endif
 
 }
 

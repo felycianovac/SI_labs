@@ -9,5 +9,5 @@ void potentiometer_init(int pin) {
 }
 
 int potentiotemeter_readPosition() {
-    return analogRead(sensorPin); // 0–1023 range
+    return analogRead(sensorPin);
 }

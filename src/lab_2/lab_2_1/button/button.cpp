@@ -19,8 +19,8 @@ bool isButtonPressed(int buttonPin) {
         // Update last press time
         lastPressTime[buttonIndex] = currentTime;
         // Return true if button is pressed
-        return false;
+        return true;
     }
     // Return false if button is not pressed
-    return true;
+    return false;
 }

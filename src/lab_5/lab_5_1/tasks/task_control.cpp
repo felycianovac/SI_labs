@@ -25,46 +25,44 @@ void ControlTask_Init() {
 
 void Task_ControlLoop(void* pvParameters) {
 
-    queueReport = xQueueCreate(5, sizeof(ReportData));
+    queueReport = xQueueCreate(5, sizeof(ReportData)); // Create a queue for report data
 
-    if (queueReport == NULL) {
+    if (queueReport == NULL) { // Check if the queue was created successfully
         printf("Queue creation failed!");
         while (1); // stop execution
     }
 
     while (true) {
-        int position = potentiotemeter_readPosition();
+        int position = potentiotemeter_readPosition(); // Read the potentiometer position
 
         // Adjust setPoint
-        if (isButtonPressed(BUTTON1))
+        if (isButtonPressed(BUTTON1)) // Check if button 1 is pressed
             // printf("Button  pressed\r\n");
-            setPoint = min(setPoint + 5, 1023);
+            setPoint = min(setPoint + 5, 1023);  // increase setPoint by 5, max 1023
         if (isButtonPressed(BUTTON2))
             // printf("Button  pressed\r\n");
             setPoint = max(setPoint - 5, 0);
 
         // ON-OFF with hysteresis
-        int lower = setPoint - hysteresis;
+        int lower = setPoint - hysteresis; //callculate lower and upper thresholds  
         int upper = setPoint + hysteresis;
 
-        if (position < lower) {
+        if (position >= upper) {
             Motor_SetPower(50);
-        } else if (position > upper) {
-            Motor_SetPower(-50);
-        } else {
+        } else if (position <= lower) {
             Motor_Stop();
         }
 
-        if (abs(position - setPoint) > alertThreshold) {
+        if (abs(position - setPoint) > alertThreshold) { // Check if the position is outside the alert threshold
             ledOn(RED_LED);
         } else {
             ledOff(RED_LED);
         }
         // Prepare and send data to the queue
-        ReportData data = { setPoint, position, Motor_GetPower() };
-        xQueueSend(queueReport, &data, portMAX_DELAY);
+        ReportData data = { setPoint, position, Motor_GetPower() }; // Create a report data structure
+        xQueueSend(queueReport, &data, portMAX_DELAY); // Send data to the queue
 
-        vTaskDelay(pdMS_TO_TICKS(200));
+        vTaskDelay(pdMS_TO_TICKS(200)); // Delay for 200ms
     }
 }
 
