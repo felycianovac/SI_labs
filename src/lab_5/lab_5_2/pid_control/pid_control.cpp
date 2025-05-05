@@ -38,15 +38,15 @@ double PIDControl_GetOutput() {
 }
 
 double PIDControl_Compute() {
-    unsigned long now = millis();
-    double dt = (now - lastTime) / 1000.0;
-    if (dt <= 0.001) dt = 0.001;
+    unsigned long now = millis(); // Get current time in milliseconds
+    double dt = (now - lastTime) / 1000.0; // Convert to seconds
+    if (dt <= 0.001) dt = 0.001; 
 
     double error = setpoint - input;
 
     // --- INTEGRAL with anti-windup based on output limits ---
-    double potentialIntegral = integral + error * dt;
-    double potentialOutput = kp * error + ki * potentialIntegral + kd * (error - previousError) / dt;
+    double potentialIntegral = integral + error * dt; // Calculate potential integral
+    double potentialOutput = kp * error + ki * potentialIntegral + kd * (error - previousError) / dt; // Calculate potential output
 
     if (potentialOutput > 255 || potentialOutput < -255) {
         // Don't update integral to avoid wind-up
@@ -69,11 +69,5 @@ double PIDControl_Compute() {
     lastTime = now;
 
     return output;
-}
-
-void PIDControl_SetTunings(double kpNew, double kiNew, double kdNew) {
-    kp = kpNew;
-    ki = kiNew;
-    kd = kdNew;
 }
 
