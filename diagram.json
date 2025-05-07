@@ -3,35 +3,37 @@
   "author": "Felicia Novac",
   "editor": "wokwi",
   "parts": [
-    {
-      "type": "wokwi-arduino-mega",
-      "id": "mega",
-      "top": 0,
-      "left": 0,
-      "attrs": {}
-    },
+    { "type": "wokwi-arduino-mega", "id": "uno", "top": 0.6, "left": -0.6, "attrs": {} },
     {
       "type": "wokwi-led",
       "id": "led1",
-      "top": -90,
-      "left": -34.6,
+      "top": -153.71,
+      "left": 17.79,
       "attrs": { "color": "red" }
     },
     {
-      "type": "wokwi-relay-module",
-      "id": "relay1",
-      "top": 288.2,
-      "left": 124.8,
-      "attrs": {}
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 253.11,
+      "left": 110.42,
+      "rotate": 90,
+      "attrs": { "color": "green", "bounce": "0" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -65.6,
+      "left": 3.68,
+      "rotate": 90,
+      "attrs": { "value": "220" }
     }
   ],
   "connections": [
-    [ "mega:5V", "relay1:VCC", "red", [ "v0" ] ],
-    [ "relay1:GND", "mega:GND.2", "black", [ "h0" ] ],
-    [ "relay1:COM", "mega:3.3V", "green", [ "h0" ] ],
-    [ "relay1:IN", "mega:5", "green", [ "h0" ] ],
-    [ "led1:A", "relay1:NO", "green", [ "v0" ] ],
-    [ "led1:C", "mega:GND.1", "green", [ "v0" ] ]
+    [ "led1:A", "uno:13", "green", [ "v8.86", "h110.44" ] ],
+    [ "led1:C", "r1:1", "green", [ "v0" ] ],
+    [ "r1:2", "uno:GND.1", "green", [ "h0" ] ],
+    [ "btn1:1.l", "uno:2", "green", [ "v-4.75", "h164.84", "v-267.86", "h-84.84" ] ],
+    [ "btn1:2.l", "uno:GND.2", "green", [ "v-29.89", "h35.38" ] ]
   ],
   "dependencies": {}
 }

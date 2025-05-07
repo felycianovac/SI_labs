@@ -5,7 +5,7 @@ static double input = 0;
 static double output = 0;
 static double setpoint = 512;
 
-static double kp = 2.0, ki = 0.5, kd = 1.0;
+static double kp = 0.5, ki = 0.05, kd = 0.1;
 
 static double previousError = 0;
 static double integral = 0;
