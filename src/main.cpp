@@ -25,7 +25,7 @@
 #define LAB_5_2_1 521
 #define LAB_6_1 61
 
-#define APP_USED LAB_6_1
+#define APP_USED LAB_5_2_1
 
 
 void setup() {
@@ -56,7 +56,7 @@ void setup() {
   #if APP_USED == LAB_5_1
     lab_5_1_app_setup();
   #endif
-  #if APP_USED == LAB_5_21
+  #if APP_USED == LAB_5_2_1
     lab_5_2_1_app_setup();
   #endif
   #if APP_USED == LAB_6_1
@@ -93,7 +93,7 @@ void loop() {
   #if APP_USED == LAB_5_1
     lab_5_1_app_loop();
   #endif
-  #if APP_USED == LAB_5_21
+  #if APP_USED == LAB_5_2_1
   lab_5_2_1_app_loop();
 #endif
   #if APP_USED == LAB_6_1
