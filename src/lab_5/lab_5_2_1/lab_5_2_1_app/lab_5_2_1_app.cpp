@@ -17,49 +17,49 @@
 
 void lab_5_2_1_app_setup() {
     service_serial_stdio_setup();
-    printf("Fan PID Control - Lab 5.2.1 started.\r\n");
+    printf("Fan PID Control Started \r\n");
 
     ledSetup();
     Motor_Init(FAN_PWM_PIN);
     Tachometer_Init(FAN_TACH_PIN);
 
-    PIDControl_Init(1.0, 0.2, 0.1);
-    PIDControl_SetSetpoint(10); // Default RPM target
+    PIDControl_Init(0.5, 0.05, 0);
+    PIDControl_SetSetpoint(1000); // Default RPM target
 }
 
 void lab_5_2_1_app_loop() {
-    static unsigned long lastUpdate = 0;
-    const unsigned long interval = 500;
-    static int setpoint = 10;
-    const int step = 50;
+    static unsigned long lastUpdate = 0; // Initialization of lastUpdate
+    const unsigned long interval = 500; // Update interval in milliseconds
+    static int setpoint = 1000; // Default setpoint RPM
+    const int step = 50; //
     const int minRPM = 10;
     const int maxRPM = 2000;
 
     // Handle user input
-    if (Serial.available()) {
-        char ch;
-        scanf(" %c", &ch);
+    if (Serial.available()) { // Check if there is user input
+        char ch; // Variable to store user input
+        scanf(" %c", &ch); // Read a character from the serial input
         if (ch == '+') {
-            setpoint = min(setpoint + step, maxRPM);
-            PIDControl_SetSetpoint(setpoint);
-            printf("+Increased SetPoint to: %d RPM\r\n", setpoint);
+            setpoint = min(setpoint + step, maxRPM); // Increase setpoint by step, but not above maxRPM
+            PIDControl_SetSetpoint(setpoint);// Set the new setpoint in the PID controller
+            printf("+Increased SetPoint to: %d RPM\r\n", setpoint); // Print the new setpoint
         } else if (ch == '-') {
-            setpoint = max(setpoint - step, minRPM);
+            setpoint = max(setpoint - step, minRPM); // Decrease setpoint by step, but not below minRPM
             PIDControl_SetSetpoint(setpoint);
             printf("-Decreased SetPoint to: %d RPM\r\n", setpoint);
         }
     }
 
     // Run PID control loop periodically
-    if (millis() - lastUpdate >= interval) {
-        lastUpdate = millis();
+    if (millis() - lastUpdate >= interval) { // Check if the interval has passed
+        lastUpdate = millis(); // Update lastUpdate to current time
 
-        int currentRPM = Tachometer_GetRPM();
-        PIDControl_SetInput(currentRPM);
-        double pidOutput = PIDControl_Compute();
+        int currentRPM = Tachometer_GetRPM(); // Get the current RPM from the tachometer
+        PIDControl_SetInput(currentRPM); // Set the current RPM as input to the PID controller
+        double pidOutput = PIDControl_Compute(); // Compute the PID output based on the current RPM and setpoint
 
-        int pwmValue = (int)pidOutput;
-        Motor_SetSpeed(pwmValue);
+        int pwmValue = (int)pidOutput; // Convert PID output to PWM value
+        Motor_SetSpeed(pwmValue); // Set the motor speed using the PWM value
 
 
         // Motor_SetSpeed((int)pidOutput);
@@ -67,7 +67,7 @@ void lab_5_2_1_app_loop() {
         printf("SetPoint: %d RPM, Measured: %d RPM, Output PWM: %d\r\n",
                setpoint, currentRPM, (int)pidOutput);
 
-        float deviation = abs(currentRPM - setpoint);
+        float deviation = abs(currentRPM - setpoint); // Calculate the deviation from the setpoint
         if (deviation > ALERT_THRESHOLD) {
             ledOn(LED_BUILTIN);  // Alert ON
         } else {

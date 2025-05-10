@@ -17,32 +17,32 @@ void tachISR() {
 }
 
 void Tachometer_Init(int pin) {
-    tachPin = pin;
-    pinMode(tachPin, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(tachPin), tachISR, FALLING);
-    lastCheck = millis();
+    tachPin = pin; // Set the tachometer pin
+    pinMode(tachPin, INPUT_PULLUP); // Set pin as input with pull-up resistor
+    attachInterrupt(digitalPinToInterrupt(tachPin), tachISR, FALLING); // Attach interrupt on falling edge
+    lastCheck = millis(); // Initialize last check time
     
     // Initialize filter
     for (int i = 0; i < RPM_FILTER_SIZE; i++) {
-        rpmHistory[i] = 0;
+        rpmHistory[i] = 0; // Initialize filter history to zero
     }
 }
 
 int Tachometer_GetRPM() {
-    unsigned long currentTime = millis();
-    unsigned long timeElapsed = currentTime - lastCheck;
+    unsigned long currentTime = millis(); // Get current time
+    unsigned long timeElapsed = currentTime - lastCheck; // Calculate elapsed time since last check
     
     // Update RPM calculation every 500ms
     if (timeElapsed >= 500) {
-        noInterrupts();
-        unsigned int count = pulseCount;
-        pulseCount = 0;
-        interrupts();
+        noInterrupts(); // Disable interrupts to safely read pulseCount
+        unsigned int count = pulseCount; // Store pulse count
+        pulseCount = 0; // Reset pulse count for next interval
+        interrupts(); // Re-enable interrupts
         
         // Most CPU fans send 2 pulses per revolution
         // RPM = (pulses / 2 pulses per rev) * (60 sec / measured_time_in_sec)
-        int newRpm = (count * 120) / (timeElapsed / 1000.0);
-        
+        int newRpm = (count * 30) / (timeElapsed / 1000.0); // Calculate RPM
+         
         // Filter out implausible readings
         if (newRpm > 10000) {
             // Likely a glitch, ignore this reading
@@ -50,26 +50,26 @@ int Tachometer_GetRPM() {
         }
         
         // Add to moving average filter
-        rpmHistory[rpmHistoryIndex] = newRpm;
-        rpmHistoryIndex = (rpmHistoryIndex + 1) % RPM_FILTER_SIZE;
+        rpmHistory[rpmHistoryIndex] = newRpm; // Store new RPM in history
+        rpmHistoryIndex = (rpmHistoryIndex + 1) % RPM_FILTER_SIZE; // Set index for next entry
         
         // Calculate filtered RPM (moving average)
-        int sum = 0;
-        int validCount = 0;
+        int sum = 0; // Initialize sum for moving average
+        int validCount = 0; // Initialize valid count for non-zero entries
         for (int i = 0; i < RPM_FILTER_SIZE; i++) {
-            if (rpmHistory[i] > 0) {
-                sum += rpmHistory[i];
+            if (rpmHistory[i] > 0) { 
+                sum += rpmHistory[i]; // Add to sum if valid
                 validCount++;
             }
         }
         
         if (validCount > 0) {
-            rpm = sum / validCount;
+            rpm = sum / validCount; // Calculate average RPM
         } else {
             rpm = newRpm;
         }
         
-        lastCheck = currentTime;
+        lastCheck = currentTime; // Update last check time
     }
     
     return rpm;
